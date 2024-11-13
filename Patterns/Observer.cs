@@ -8,17 +8,17 @@ internal class Observer()
 
         CurrentConditionDisplay currentConditionDisplay = new CurrentConditionDisplay(weatherData);
         HeatIndexDisplay heatIndexDisplay = new HeatIndexDisplay(weatherData);
+        TemperatureResumeDisplay temperatureResumeDisplay = new TemperatureResumeDisplay(weatherData);
 
         weatherData.setMeasurements(80, 65, 30.4f);
         weatherData.setMeasurements(82, 70, 29.2f);
         weatherData.setMeasurements(78, 90, 29.2f);
     }
-
 }
 
 public interface IObserver
 {
-    public void update(float temperature, float humidity, float pressure);
+    public void update();
 }
 
 public interface IDisplayElement
@@ -57,7 +57,7 @@ public class WeatherData : ISubject
 
     public void notifyObservers()
     {
-        observers.ForEach(o => o.update(temperature, humidity, pressure));
+        observers.ForEach(o => o.update());
     }
 
     public void measurementsChanged()
@@ -71,6 +71,21 @@ public class WeatherData : ISubject
         this.humidity = humidity;
         this.pressure = pressure;
         measurementsChanged();
+    }
+
+    public float getTemperature()
+    { 
+        return temperature; 
+    }
+
+    public float getHumidity()
+    {
+        return humidity;
+    }
+
+    public float getPressure()
+    {
+        return pressure;
     }
 }
 
@@ -86,10 +101,10 @@ public class CurrentConditionDisplay : IObserver, IDisplayElement
         weatherData.registerObserver(this);
     }
 
-    public void update(float temperature, float humidity, float pressure)
+    public void update()
     {
-        this.temperature = temperature;
-        this.humidity = humidity;
+        this.temperature = this.weatherData.getTemperature();
+        this.humidity = this.weatherData.getHumidity();
         display();
     }
 
@@ -110,8 +125,10 @@ public class HeatIndexDisplay : IObserver, IDisplayElement
         weatherData.registerObserver(this);
     }
 
-    public void update(float temperature, float humidity, float pressure)
+    public void update()
     {
+        float temperature = this.weatherData.getTemperature();
+        float humidity = this.weatherData.getHumidity();
         this.heatIndex = computeHeatIndex(temperature, humidity);
         display();
     }
@@ -129,9 +146,32 @@ public class HeatIndexDisplay : IObserver, IDisplayElement
         return index;
     }
 
-
     public void display()
     {
         Console.WriteLine($"Heat index is {heatIndex}");
     }
+}
+
+public class TemperatureResumeDisplay: IObserver, IDisplayElement
+{
+    IList<float> temperatures = new List<float>();
+    private readonly WeatherData weatherData;
+
+    public TemperatureResumeDisplay(WeatherData weatherData)
+    {
+        this.weatherData = weatherData;
+        weatherData.registerObserver(this);
+    }
+
+    public void update()
+    {
+        temperatures.Add(this.weatherData.getTemperature());
+        display();
+    }
+
+    public void display()
+    {
+        Console.WriteLine($"Avg/Max/Min temperatures: {temperatures.Average()}/{temperatures.Max()}/{temperatures.Min()}");
+    }
+
 }
