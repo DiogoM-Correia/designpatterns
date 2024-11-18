@@ -15,6 +15,9 @@ class Program
             case "2":
                 Observer.ObserverModel(); 
                 break;
+            case "3":
+                Decorator.DecoratorModel();
+                break;
         }
     }
 
@@ -22,11 +25,12 @@ class Program
     {
         bool valid = false;
         string option = "";
-        List<string> validInputs = new List<string>() { "1", "2" };
+        List<string> validInputs = new List<string>() { "1", "2", "3" };
 
         Console.WriteLine("Choose one option!");
         Console.WriteLine("1) Strategy Model");
         Console.WriteLine("2) Observer Model");
+        Console.WriteLine("3) Decorator Model");
         Console.WriteLine("");
 
         while (!valid)

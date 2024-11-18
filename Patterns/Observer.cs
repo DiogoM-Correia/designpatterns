@@ -55,7 +55,7 @@ public class WeatherData : ISubject
         observers.Remove(o);
     }
 
-    private void notifyObservers()
+    public void notifyObservers()
     {
         observers.ForEach(o => o.update());
     }
