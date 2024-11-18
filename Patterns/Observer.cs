@@ -55,12 +55,12 @@ public class WeatherData : ISubject
         observers.Remove(o);
     }
 
-    public void notifyObservers()
+    private void notifyObservers()
     {
         observers.ForEach(o => o.update());
     }
 
-    public void measurementsChanged()
+    private void measurementsChanged()
     {
         notifyObservers();
     }
