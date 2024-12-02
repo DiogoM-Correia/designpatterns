@@ -1,6 +1,5 @@
-using System.Transactions;
 
-namespace patterns;
+namespace decorator;
 
 internal class Decorator()
 {

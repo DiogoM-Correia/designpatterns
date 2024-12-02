@@ -1,4 +1,4 @@
-﻿namespace patterns;
+﻿namespace observer;
 
 internal class Observer()
 {
