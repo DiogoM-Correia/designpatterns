@@ -3,6 +3,7 @@ using factory;
 using simplefactory;
 using observer;
 using abstractfactory;
+using singleton;
 
 namespace patterns;
 
@@ -18,12 +19,15 @@ class Program
             case "1":
                 Strategy.StrategyModel();
                 break;
+
             case "2":
                 Observer.ObserverModel();
                 break;
+
             case "3":
                 Decorator.DecoratorModel();
                 break;
+
             case "4":
                 bool valid = false;
                 string option = "";
@@ -59,8 +63,13 @@ class Program
                     {
                         Console.WriteLine("Invalid option. Choose again");
                     }
-            }
-            break;
+                }
+                break;
+
+            case "5":
+                SingletonPattern.SingletonModel();
+                break;
+                
         }
     }
 
@@ -68,13 +77,14 @@ class Program
     {
         bool valid = false;
         string option = "";
-        List<string> validInputs = new List<string>() { "1", "2", "3", "4" };
+        List<string> validInputs = new List<string>() { "1", "2", "3", "4", "5" };
 
         Console.WriteLine("Choose one option!");
         Console.WriteLine("1) Strategy Pattern");
         Console.WriteLine("2) Observer Pattern");
         Console.WriteLine("3) Decorator Pattern");
         Console.WriteLine("4) Factory Pattern");
+        Console.WriteLine("5) Singleton Pattern");
         Console.WriteLine("");
 
         while (!valid)
