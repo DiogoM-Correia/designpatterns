@@ -5,6 +5,7 @@ using observer;
 using abstractfactory;
 using singleton;
 using command;
+using adapter;
 
 namespace patterns;
 
@@ -74,6 +75,10 @@ class Program
             case "6":
                 CommandPattern.CommandModel();
                 break;
+
+            case "7":
+                AdapterPattern.AdapterModel();
+                break;
         }
     }
 
@@ -81,7 +86,7 @@ class Program
     {
         bool valid = false;
         string option = "";
-        List<string> validInputs = new List<string>() { "1", "2", "3", "4", "5", "6" };
+        List<string> validInputs = Enumerable.Range(1, 7).Select(n => n.ToString()).ToList();
 
         Console.WriteLine("Choose one option!");
         Console.WriteLine("1) Strategy Pattern");
@@ -90,6 +95,7 @@ class Program
         Console.WriteLine("4) Factory Pattern");
         Console.WriteLine("5) Singleton Pattern");
         Console.WriteLine("6) Command Pattern");
+        Console.WriteLine("7) Adapter Pattern");
         Console.WriteLine("");
 
         while (!valid)
