@@ -8,6 +8,7 @@ using command;
 using adapter;
 using templatemethod;
 using iterator;
+using composite;
 
 namespace patterns;
 
@@ -88,6 +89,10 @@ class Program
             case "9":
                 IteratorPattern.IteratorModel();
                 break;
+
+            case "10":
+                CompositePattern.CompositeModel();
+                break;
         }
     }
 
@@ -95,7 +100,7 @@ class Program
     {
         bool valid = false;
         string option = "";
-        List<string> validInputs = Enumerable.Range(1, 9).Select(n => n.ToString()).ToList();
+        List<string> validInputs = Enumerable.Range(1, 10).Select(n => n.ToString()).ToList();
 
         Console.WriteLine("Choose one option!");
         Console.WriteLine("1) Strategy Pattern");
@@ -107,6 +112,7 @@ class Program
         Console.WriteLine("7) Adapter Pattern");
         Console.WriteLine("8) Template Method Pattern");
         Console.WriteLine("9) Iterator Pattern");
+        Console.WriteLine("10) Composite Pattern");
         Console.WriteLine("");
 
         while (!valid)
