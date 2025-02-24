@@ -1,5 +1,4 @@
-﻿
-namespace factory;
+﻿namespace factory;
 
 internal class Factory()
 {
@@ -9,80 +8,116 @@ internal class Factory()
         PizzaStore chicagoStore = new ChicagoPizzaStore();
 
         Pizza pizza = nyStore.OrderPizza("cheese");
-        Console.WriteLine("Ethan ordered a " + pizza.name + "\n");
+        Console.WriteLine($"Ethan ordered a {pizza.Name}\n");
 
         pizza = chicagoStore.OrderPizza("cheese");
-        Console.WriteLine("Joel ordered a " + pizza.name + "\n");
+        Console.WriteLine($"Joel ordered a {pizza.Name}\n");
+
+        pizza = nyStore.OrderPizza("veggie");
+        Console.WriteLine($"Ethan ordered a {pizza.Name}\n");
+
+        pizza = chicagoStore.OrderPizza("veggie");
+        Console.WriteLine($"Joel ordered a {pizza.Name}\n");
     }
 }
 
-public abstract class Pizza()
+public abstract class Pizza
 {
-    public string name;
-    public string dough;
-    public string sauce;
-    public List<string> toppings = new List<string>();
+    public string Name { get; protected set; }
+    public string Dough { get; protected set; }
+    public string Sauce { get; protected set; }
+    public List<string> Toppings { get; } = new();
+
+    protected Pizza(string name, string dough, string sauce)
+    {
+        this.Name = name;
+        this.Dough = dough;
+        this.Sauce = sauce;
+    }
+
     public void Prepare()
     {
-        Console.WriteLine("Preparing " + name);
+        Console.WriteLine($"Preparing {Name}");
         Console.WriteLine("Tossing dough...");
         Console.WriteLine("Adding sauce...");
         Console.WriteLine("Adding toppings: ");
-        foreach (var topping in toppings)
-        {
-            Console.WriteLine("-" + topping);
-        }
+        Toppings.ForEach(topping => Console.WriteLine($"   {topping}"));
     }
 
-    public void Bake()
+    public virtual void Bake()
     {
-        Console.WriteLine($"Baking {name}");
+        Console.WriteLine("Bake for 25 minutes at 350");
     }
 
-    public void Cut()
+    public virtual void Cut()
     {
-        Console.WriteLine($"Cutting {name}");
+        Console.WriteLine("Cutting the pizza into diagonal slices");
     }
 
-    public void Box()
+    public virtual void Box()
     {
-        Console.WriteLine($"Boxing {name}");
+        Console.WriteLine("Place pizza in official PizzaStore box");
     }
 }
+
 public class NYStyleCheesePizza : Pizza
 {
-    public NYStyleCheesePizza()
+    public NYStyleCheesePizza() 
+        : base("NY Style Sauce and Cheese Pizza", "Thin Crust Dough", "Marinara Sauce")
     {
-        name = "NY Style Sauce and Cheese Pizza";
-        dough = "Thin Crust Dough";
-        sauce = "Marinara Sauce";
-        toppings.Add("Grated Reggiano Cheese");
+        Toppings.Add("Grated Reggiano Cheese");
+    }
+}
+
+public class NYStyleVeggiePizza : Pizza
+{
+    public NYStyleVeggiePizza()
+        : base("NY Style Veggie Pizza", "Thin Crust Dough", "Marinara Sauce")
+    {
+        Toppings.Add("Grated Reggiano Cheese");
+        Toppings.Add("Garlic");
+        Toppings.Add("Onion");
+        Toppings.Add("Mushrooms");
+        Toppings.Add("Red Pepper");
     }
 }
 
 public class ChicagoStyleCheesePizza : Pizza
 {
     public ChicagoStyleCheesePizza()
+        : base("Chicago Style Deep Dish Cheese Pizza", "Extra Thick Crust Dough", "Plum Tomato Sauce")
     {
-        name = "Chicago Style Deep Dish Cheese Pizza";
-        dough = "Extra Thick Crust Dough";
-        sauce = "Plum Tomato Sauce";
-        toppings.Add("Shredded Mozzarella Cheese");
+        Toppings.Add("Shredded Mozzarella Cheese");
     }
-    public void Cut()
+
+    public override void Cut()
     {
         Console.WriteLine("Cutting the pizza into square slices");
     }
 }
 
+public class ChicagoStyleVeggiePizza : Pizza
+{
+    public ChicagoStyleVeggiePizza()
+        : base("Chicago Deep Dish Veggie Pizza", "Extra Thick Crust Dough", "Plum Tomato Sauce")
+    {
+        Toppings.Add("Shredded Mozzarella Cheese");
+        Toppings.Add("Black Olives");
+        Toppings.Add("Spinach");
+        Toppings.Add("Eggplant");
+    }
+
+    public override void Cut()
+    {
+        Console.WriteLine("Cutting the pizza into square slices");
+    }
+}
 
 public abstract class PizzaStore
 {
     public Pizza OrderPizza(string type)
     {
-        Pizza pizza;
-
-        pizza = CreatePizza(type);
+        Pizza pizza = CreatePizza(type);
 
         pizza.Prepare();
         pizza.Bake();
@@ -99,14 +134,12 @@ public class NYPizzaStore : PizzaStore
 {
     protected override Pizza CreatePizza(string type)
     {
-        if (type.Equals("cheese", StringComparison.OrdinalIgnoreCase))
+        return type switch
         {
-            return new NYStyleCheesePizza();
-        }
-        else
-        {
-            return null;
-        }
+            "cheese" => new NYStyleCheesePizza(),
+            "veggie" => new NYStyleVeggiePizza(),
+            _ => throw new ArgumentException("Invalid pizza type", nameof(type))
+        };
     }
 }
 
@@ -114,13 +147,11 @@ public class ChicagoPizzaStore : PizzaStore
 {
     protected override Pizza CreatePizza(string type)
     {
-        if (type.Equals("cheese", StringComparison.OrdinalIgnoreCase))
+        return type switch
         {
-            return new ChicagoStyleCheesePizza();
-        }
-        else
-        {
-            return null;
-        }
+            "cheese" => new ChicagoStyleCheesePizza(),
+            "veggie" => new ChicagoStyleVeggiePizza(),
+            _ => throw new ArgumentException("Invalid pizza type", nameof(type))
+        };
     }
 }
