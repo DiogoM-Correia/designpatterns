@@ -10,102 +10,112 @@ using templatemethod;
 using iterator;
 using composite;
 using state;
+using proxy;
+using patterns;
 
-namespace patterns;
+namespace Design;
 
 class Program
 {
     static void Main(string[] args)
     {
-        var selection = UserSelection();
-
-        switch (selection)
+        while (true)
         {
-            case "1":
-                Strategy.StrategyModel();
-                break;
+            Console.WriteLine("Select a pattern to demonstrate:");
+            var selection = UserSelection();
 
-            case "2":
-                Observer.ObserverModel();
-                break;
+            switch (selection)
+            {
+                case "1":
+                    Strategy.StrategyModel();
+                    break;
 
-            case "3":
-                Decorator.DecoratorModel();
-                break;
+                case "2":
+                    Observer.ObserverModel();
+                    break;
 
-            case "4":
-                bool valid = false;
-                string option = "";
-                List<string> validInputs = new List<string>() { "1", "2", "3" };
+                case "3":
+                    Decorator.DecoratorModel();
+                    break;
 
-                while (!valid)
-                {
-                    Console.WriteLine("Choose a sub option!");
-                    Console.WriteLine("1) Simple Factory");
-                    Console.WriteLine("2) Factory");
-                    Console.WriteLine("3) Abstract Factory");
-                    Console.WriteLine();
-                    option = Console.ReadLine();
+                case "4":
+                    bool valid = false;
+                    string? option = string.Empty;
+                    List<string> validInputs = new List<string>() { "1", "2", "3" };
 
-                    if (option != null && validInputs.Contains(option))
+                    while (!valid)
                     {
-                        switch (option)
+                        Console.WriteLine("Choose a sub option!");
+                        Console.WriteLine("1) Simple Factory");
+                        Console.WriteLine("2) Factory");
+                        Console.WriteLine("3) Abstract Factory");
+                        Console.WriteLine();
+                        option = Console.ReadLine();
+
+                        if (option != null && validInputs.Contains(option))
                         {
-                            case "1":
-                                SimpleFactory.SimpleFactoryModel();
-                                break;
+                            switch (option)
+                            {
+                                case "1":
+                                    SimpleFactory.SimpleFactoryModel();
+                                    break;
 
-                            case "2":
-                                Factory.FactoryModel(); 
-                                break;
-                            case "3":
-                                AbstractFactory.AbstractFactoryModel();
-                                break;
+                                case "2":
+                                    Factory.FactoryModel();
+                                    break;
+                                case "3":
+                                    AbstractFactory.AbstractFactoryModel();
+                                    break;
+                            }
+                            valid = true;
                         }
-                        valid = true;
+                        else
+                        {
+                            Console.WriteLine("Invalid option. Choose again");
+                        }
                     }
-                    else
-                    {
-                        Console.WriteLine("Invalid option. Choose again");
-                    }
-                }
-                break;
+                    break;
 
-            case "5":
-                SingletonPattern.SingletonModel();
-                break;
+                case "5":
+                    SingletonPattern.SingletonModel();
+                    break;
 
-            case "6":
-                CommandPattern.CommandModel();
-                break;
+                case "6":
+                    CommandPattern.CommandModel();
+                    break;
 
-            case "7":
-                AdapterPattern.AdapterModel();
-                break;
+                case "7":
+                    AdapterPattern.AdapterModel();
+                    break;
 
-            case "8":
-                TemplateMethod.TemplateMethodModel();
-                break;
+                case "8":
+                    TemplateMethod.TemplateMethodModel();
+                    break;
 
-            case "9":
-                IteratorPattern.IteratorModel();
-                break;
+                case "9":
+                    IteratorPattern.IteratorModel();
+                    break;
 
-            case "10":
-                CompositePattern.CompositeModel();
-                break;
+                case "10":
+                    CompositePattern.CompositeModel();
+                    break;
 
-            case "11":
-                StatePattern.StateModel();
-                break;
+                case "11":
+                    StatePattern.StateModel();
+                    break;
+
+                case "12":
+                    ProxyPattern.ProxyModel();
+                    break;
+            }
         }
     }
 
     public static string UserSelection()
     {
         bool valid = false;
-        string option = "";
-        List<string> validInputs = Enumerable.Range(1, 11).Select(n => n.ToString()).ToList();
+        string option = string.Empty;
+        List<string> validInputs = Enumerable.Range(1, 12).Select(n => n.ToString()).ToList();
 
         Console.WriteLine("Choose one option!");
         Console.WriteLine("1) Strategy Pattern");
@@ -119,13 +129,15 @@ class Program
         Console.WriteLine("9) Iterator Pattern");
         Console.WriteLine("10) Composite Pattern");
         Console.WriteLine("11) State Pattern");
+        Console.WriteLine("12) Proxy Pattern");
         Console.WriteLine("");
 
         while (!valid)
         {
-            option = Console.ReadLine();
+            string? input = Console.ReadLine();
+            option = input ?? string.Empty;
 
-            if (option != null && validInputs.Contains(option))
+            if (!string.IsNullOrEmpty(option) && validInputs.Contains(option))
             {
                 valid = true;
             }

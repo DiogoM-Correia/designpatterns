@@ -1,3 +1,5 @@
+using proxy;
+
 namespace state;
 
 public interface IGumballMachineState
@@ -10,9 +12,9 @@ public interface IGumballMachineState
 
 public class NoQuarterState : IGumballMachineState
 {
-    private GumballMachine _gumballMachine;
+    private IGumballMachineRemote _gumballMachine;
 
-    public NoQuarterState(GumballMachine gumballMachine)
+    public NoQuarterState(IGumballMachineRemote gumballMachine)
     {
         _gumballMachine = gumballMachine;
     }
@@ -41,10 +43,10 @@ public class NoQuarterState : IGumballMachineState
 
 public class HasQuarterState : IGumballMachineState
 {
-    private GumballMachine _gumballMachine;
+    private IGumballMachineRemote _gumballMachine;
     private Random _randomWinner = new Random();
 
-    public HasQuarterState(GumballMachine gumballMachine)
+    public HasQuarterState(IGumballMachineRemote gumballMachine)
     {
         _gumballMachine = gumballMachine;
     }
@@ -82,9 +84,9 @@ public class HasQuarterState : IGumballMachineState
 
 public class SoldState : IGumballMachineState
 {
-    private GumballMachine _gumballMachine;
+    private IGumballMachineRemote _gumballMachine;
 
-    public SoldState(GumballMachine gumballMachine)
+    public SoldState(IGumballMachineRemote gumballMachine)
     {
         _gumballMachine = gumballMachine;
     }
@@ -121,9 +123,9 @@ public class SoldState : IGumballMachineState
 
 public class SoldOutState : IGumballMachineState
 {
-    private GumballMachine _gumballMachine;
+    private IGumballMachineRemote _gumballMachine;
 
-    public SoldOutState(GumballMachine gumballMachine)
+    public SoldOutState(IGumballMachineRemote gumballMachine)
     {
         _gumballMachine = gumballMachine;
     }
@@ -149,9 +151,14 @@ public class SoldOutState : IGumballMachineState
     }
 }
 
-public class WinnerState(GumballMachine gumballMachine) : IGumballMachineState
+public class WinnerState : IGumballMachineState
 {
-    private GumballMachine _gumballMachine = gumballMachine;
+    private IGumballMachineRemote _gumballMachine;
+
+    public WinnerState(IGumballMachineRemote gumballMachine)
+    {
+        _gumballMachine = gumballMachine;
+    }
 
     public void InsertQuarter()
     {
@@ -192,72 +199,11 @@ public class WinnerState(GumballMachine gumballMachine) : IGumballMachineState
     }
 }
 
-public class GumballMachine
-{
-    private readonly IGumballMachineState _soldOutState;
-    private readonly IGumballMachineState _noQuarterState;
-    private readonly IGumballMachineState _hasQuarterState;
-    private readonly IGumballMachineState _soldState;
-    private readonly IGumballMachineState _winnerState;
-
-    private IGumballMachineState _state;
-    private int _count = 0;
-
-    public GumballMachine(int numberGumballs)
-    {
-        _soldOutState = new SoldOutState(this);
-        _noQuarterState = new NoQuarterState(this);
-        _hasQuarterState = new HasQuarterState(this);
-        _soldState = new SoldState(this);
-        _winnerState = new WinnerState(this);
-
-        _count = numberGumballs;
-        if (numberGumballs > 0)
-        {
-            _state = _noQuarterState;
-        }
-        else
-        {
-            _state = _soldOutState;
-        }
-    }
-
-    public void InsertQuarter() => _state.InsertQuarter();
-    public void EjectQuarter() => _state.EjectQuarter();
-    public void TurnCrank()
-    {
-        _state.TurnCrank();
-        _state.Dispense();
-    }
-
-    public void SetState(IGumballMachineState state)
-    {
-        _state = state;
-    }
-
-    public void ReleaseBall()
-    {
-        Console.WriteLine("A gumball comes rolling out the slot...");
-        if (_count > 0)
-        {
-            _count--;
-        }
-    }
-
-    public int GetCount() => _count;
-    public IGumballMachineState GetState() => _state;
-    public IGumballMachineState GetSoldOutState() => _soldOutState;
-    public IGumballMachineState GetNoQuarterState() => _noQuarterState;
-    public IGumballMachineState GetHasQuarterState() => _hasQuarterState;
-    public IGumballMachineState GetSoldState() => _soldState;
-    public IGumballMachineState GetWinnerState() => _winnerState;
-}
-
 public class StatePattern
 {
     public static void StateModel()
     {
-        GumballMachine gumballMachine = new GumballMachine(5);
+        GumballMachine gumballMachine = new GumballMachine("Test Location", 5);
 
         Console.WriteLine("\n--- State Pattern Demo ---\n");
 
